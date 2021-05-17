@@ -1,45 +1,50 @@
 require("dotenv").config({path: __dirname + '/config.env'})
-const app = require("express")();
+const path = require('path');
+const express = require("express");
+const app = express();
 const server = require("http").createServer(app);
 const cors = require("cors");
+const socketIO = require('socket.io');
 
 
-const socket = require('socket.io')(server, {
+const publicPath = path.join(__dirname, './public');
+const port = process.env.PORT || 6051;
+
+console.log(publicPath)
+const io = socketIO(server, {
     cors: {
         origin: "*",
-        methods: ["GET", "POST"]
+        // methods: ["GET", "POST"]
     }
 });
 
-
 app.use(cors());
 
-const port = parseInt(process.env.PORT) || 6051;
+app.use(express.static(publicPath));
 
 
-app.get('/', (req, res)=>{
-    console.log("here")
-    res.send("Server is running.");
-});
+
+io.on('connection', (socket) => {
+    console.log(socket.id)
+    socket.emit('me', socket.id);
 
 
-// io.on('connection', (socket) => {
-//     socket.emit('me', socket.id);
 
-//     socket.on('disconnect', ()=>{
-//         socket.broadcast.emit("callended")
-//     })
+    socket.on('disconnect', ()=>{
+        console.log('User disconnected')
+        socket.broadcast.emit("disconnected")
+    })
 
-//     socket.on('calluser',({userToCall, signalData, from, name})=>{
-//         io.to(userToCall).emit("calluser", { signal: signalData, from, name});
-//     });
+    // socket.on('calluser',({userToCall, signalData, from, name})=>{
+    //     io.to(userToCall).emit("calluser", { signal: signalData, from, name});
+    // });
 
-//     socket.on("")
+    // socket.on("")
 
-//     socket.on('disconnect', ()=>{
-//         socket.broadcast.emit("callended")
-//     })
-// })
+    // socket.on('disconnect', ()=>{
+    //     socket.broadcast.emit("callended")
+    // })
+})
 
 
 
