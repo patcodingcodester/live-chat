@@ -23,23 +23,23 @@ app.get('/', (req, res)=>{
 });
 
 
-io.on('connection', (socket) => {
-    socket.emit('me', socket.id);
+// io.on('connection', (socket) => {
+//     socket.emit('me', socket.id);
 
-    socket.on('disconnect', ()=>{
-        socket.broadcast.emit("callended")
-    })
+//     socket.on('disconnect', ()=>{
+//         socket.broadcast.emit("callended")
+//     })
 
-    socket.on('calluser',({userToCall, signalData, from, name})=>{
-        io.to(userToCall).emit("calluser", { signal: signalData, from, name});
-    });
+//     socket.on('calluser',({userToCall, signalData, from, name})=>{
+//         io.to(userToCall).emit("calluser", { signal: signalData, from, name});
+//     });
 
-    socket.on("")
+//     socket.on("")
 
-    socket.on('disconnect', ()=>{
-        socket.broadcast.emit("callended")
-    })
-})
+//     socket.on('disconnect', ()=>{
+//         socket.broadcast.emit("callended")
+//     })
+// })
 
 
 
